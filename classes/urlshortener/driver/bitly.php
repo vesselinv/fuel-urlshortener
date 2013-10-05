@@ -30,10 +30,10 @@ class Urlshortener_Driver_Bitly extends Urlshortener_Driver
 			)
 		));
 
-		$response = $curl->execute()->response();		
-		if (intval($response->status / 100) != 2) 
+		$response = $curl->execute()->response();
+		if (intval($response->status / 100) != 2)
 		{
-			throw new \Fuel_Exception('There was a problem shortening the url ('.$response->status.')');
+			throw new \FuelException('There was a problem shortening the url ('.$response->status.')');
 		}
 		$data = json_decode($response->body);
 		switch($data->status_code)
@@ -44,15 +44,15 @@ class Urlshortener_Driver_Bitly extends Urlshortener_Driver
 				break;
 			case 500:
 			case 401:
-				throw new \Fuel_Exception('Please set your bit.ly API key and login name in the config ('.$data->status_code.')');
+				throw new \FuelException('Please set your bit.ly API key and login name in the config ('.$data->status_code.')');
 				break;
 			default:
-				throw new \Fuel_Exception('There was a problem shortening the url ('.$data->status_code.')');
+				throw new \FuelException('There was a problem shortening the url ('.$data->status_code.')');
 		}
-		
-		return false;		
+
+		return false;
 	}
-	
+
 	/**
 	 * @return	bool	long url String
 	 */
@@ -69,15 +69,15 @@ class Urlshortener_Driver_Bitly extends Urlshortener_Driver
 			)
 		));
 
-		$response = $curl->execute()->response();		
-		
-		if (intval($response->status / 100) != 2) 
+		$response = $curl->execute()->response();
+
+		if (intval($response->status / 100) != 2)
 		{
-			throw new \Fuel_Exception('There was a problem expanding the url ('.$response->status.')');
+			throw new \FuelException('There was a problem expanding the url ('.$response->status.')');
 		}
-		
+
 		$data = json_decode($response->body);
-		
+
 		switch($data->status_code)
 		{
 			case 200:
@@ -87,8 +87,8 @@ class Urlshortener_Driver_Bitly extends Urlshortener_Driver
 				{
 					if( $expanded->error == 'NOT_FOUND' )
 						throw new NotFoundException('The short url could not be expanded because it doesn\'t exist');
-						
-					throw new \Fuel_Exception('There was a problem expanding the url ('.$expanded->error.')');
+
+					throw new \FuelException('There was a problem expanding the url ('.$expanded->error.')');
 				}
 				else
 				{
@@ -97,12 +97,12 @@ class Urlshortener_Driver_Bitly extends Urlshortener_Driver
 				break;
 			case 500:
 			case 401:
-				throw new \Fuel_Exception('Please set your bit.ly API key and login name in the config ('.$data->status_code.')');
+				throw new \FuelException('Please set your bit.ly API key and login name in the config ('.$data->status_code.')');
 				break;
 			default:
-				throw new \Fuel_Exception('There was a problem expanding the url ('.$data->status_code.')');
+				throw new \FuelException('There was a problem expanding the url ('.$data->status_code.')');
 		}
-		
-		return false;	
+
+		return false;
 	}
 }
